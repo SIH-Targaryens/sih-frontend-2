@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guid-ED - Course Recommendations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2C5282;
+            --primary-green: #38A169;
+            --accent-orange: #DD6B20;
+            --light-gray: #F7FAFC;
+            --white: #FFFFFF;
+            --text-dark: #2D3748;
+            --text-light: #718096;
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --purple: #805AD5;
+            --teal: #319795;
+            --chatbot-blue: #4299E1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--primary-blue);
+        }
+
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-orange);
+            color: var(--white);
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: var(--white);
+            padding: 40px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .welcome-text h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .welcome-text p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .welcome-illustration {
+            display: flex;
+            gap: 15px;
+        }
+
+        .illustration-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stream-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background-color: var(--white);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+
+        .search-container {
+            flex-grow: 1;
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .location-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Course Cards Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .course-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .course-card.selected {
+            border: 2px solid var(--primary-blue);
+        }
+
+        .stream-banner {
+            height: 8px;
+            width: 100%;
+        }
+
+        .science { background-color: #4299E1; }
+        .arts { background-color: #9F7AEA; }
+        .commerce { background-color: #48BB78; }
+        .vocational { background-color: #ED8936; }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .match-score {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .score-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-green) 0%, var(--primary-green) var(--score), #e6e6e6 var(--score), #e6e6e6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .score-circle::before {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--white);
+        }
+
+        .score-text {
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .course-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .career-paths {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .career-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .career-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-size: 16px;
+        }
+
+        .career-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .college-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .college-info i {
+            margin-right: 5px;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #2a4a7c;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-purple {
+            background-color: var(--purple);
+            color: var(--white);
+        }
+
+        .btn-purple:hover {
+            background-color: #6b46c1;
+        }
+
+        .btn-teal {
+            background-color: var(--teal);
+            color: var(--white);
+        }
+
+        .btn-teal:hover {
+            background-color: #2c7a7b;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .favorite-btn.active {
+            color: var(--accent-orange);
+        }
+
+        /* Comparison Sidebar */
+        .comparison-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: var(--white);
+            box-shadow: var(--shadow-lg);
+            z-index: 200;
+            transition: right 0.3s;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .comparison-sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .comparison-table td {
+            font-size: 14px;
+        }
+
+        .clear-comparison {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--light-gray);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .clear-comparison:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* Roadmap Section */
+        .roadmap-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-blue);
+        }
+
+        .roadmap-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background-color: var(--light-gray);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .roadmap-content {
+            display: none;
+        }
+
+        .roadmap-content.active {
+            display: block;
+        }
+
+        .roadmap-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .roadmap-timeline::before {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--border-color);
+        }
+
+        .timeline-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .timeline-description {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .timeline-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            padding: 4px 10px;
+            background-color: var(--light-gray);
+            border-radius: 15px;
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+
+        /* Mentor Section */
+        .mentor-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .mentor-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .mentor-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .mentor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .mentor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary-blue);
+            margin-right: 15px;
+        }
+
+        .mentor-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .mentor-info p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .mentor-bio {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .mentor-expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .expertise-tag {
+            padding: 4px 10px;
+            background-color: var(--light-gray);
+            border-radius: 15px;
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+
+        .mentor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--chatbot-blue);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .chatbot-icon:hover {
+            transform: scale(1.1);
+            background-color: #3182ce;
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s;
+        }
+
+        .chatbot-window.active {
+            transform: scale(1);
+        }
+
+        .chatbot-header {
+            background-color: var(--chatbot-blue);
+            color: var(--white);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chatbot-input-container {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chatbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chatbot-send:hover {
+            background-color: #2a4a7c;
+        }
+
+        .chatbot-suggestions {
+            padding: 10px 15px;
+            background-color: var(--light-gray);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion-btn {
+            padding: 5px 12px;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-color: var(--primary-blue);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 5px 10px;
+            }
+
+            .welcome-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+
+            .welcome-text h1 {
+                font-size: 24px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .card-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .mentor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chatbot-window {
+                width: 90%;
+                height: 70%;
+                right: 5%;
+                left: 5%;
+            }
+        }
+
+        /* Overlay for mobile comparison */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .close-modal:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .mentor-schedule {
+            margin-top: 20px;
+        }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .schedule-day {
+            font-weight: 600;
+        }
+
+        .schedule-time {
+            color: var(--text-light);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Guid-ED</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Quiz</a></li>
+                        <li><a href="#" class="active">Colleges</a></li>
+                        <li><a href="#">Timeline</a></li>
+                        <li><a href="#">Resources</a></li>
+                    </ul>
+                </nav>
+                <div class="user-profile">
+                    <div class="profile-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="notification-badge">3</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1 style="margin-left: 15px; text-align: left;">Heyy, Student!</h1>
+                        <p style="margin-left: 15px; text-align: left;">Based on your interests in problem-solving and creativity, here are your top matches:</p>
+                    </div>
+                    <div class="welcome-illustration">
+                        <div class="illustration-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="illustration-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="illustration-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="filter-bar">
+                <div class="stream-filters">
+                    <button class="filter-btn active" data-stream="all">
+                        <i class="fas fa-th-large"></i> All
+                    </button>
+                    <button class="filter-btn" data-stream="science">
+                        <i class="fas fa-flask"></i> Science
+                    </button>
+                    <button class="filter-btn" data-stream="arts">
+                        <i class="fas fa-palette"></i> Arts
+                    </button>
+                    <button class="filter-btn" data-stream="commerce">
+                        <i class="fas fa-briefcase"></i> Commerce
+                    </button>
+                    <button class="filter-btn" data-stream="vocational">
+                        <i class="fas fa-tools"></i> Vocational
+                    </button>
+                </div>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Find specific courses">
+                </div>
+                <div class="location-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="locationToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Show only nearby colleges</span>
+                </div>
+            </section>
+
+            <section class="course-grid" id="courseGrid">
+                <!-- Course cards will be generated by JavaScript -->
+            </section>
+
+            <!-- Roadmap Section -->
+            <section class="roadmap-section">
+                <div class="section-header">
+                    <h2 class="section-title">Career Roadmaps</h2>
+                    <a href="#" class="btn btn-primary">View All Roadmaps</a>
+                </div>
+                <div class="roadmap-tabs">
+                    <button class="tab-btn active" data-roadmap="tech">Technology</button>
+                    <button class="tab-btn" data-roadmap="business">Business</button>
+                    <button class="tab-btn" data-roadmap="creative">Creative</button>
+                    <button class="tab-btn" data-roadmap="healthcare">Healthcare</button>
+                </div>
+                
+                <div class="roadmap-content active" id="tech-roadmap">
+                    <div class="roadmap-timeline">
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Foundation Year</h3>
+                            <p class="timeline-description">Build core programming skills and computer science fundamentals</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Programming Basics</span>
+                                <span class="skill-tag">Data Structures</span>
+                                <span class="skill-tag">Algorithms</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Specialization Year</h3>
+                            <p class="timeline-description">Focus on your chosen technology domain</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Web Development</span>
+                                <span class="skill-tag">Mobile Apps</span>
+                                <span class="skill-tag">Cloud Computing</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Advanced Skills</h3>
+                            <p class="timeline-description">Master advanced concepts and industry tools</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Machine Learning</span>
+                                <span class="skill-tag">DevOps</span>
+                                <span class="skill-tag">System Design</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Professional Growth</h3>
+                            <p class="timeline-description">Build leadership skills and industry expertise</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Project Management</span>
+                                <span class="skill-tag">Team Leadership</span>
+                                <span class="skill-tag">Architecture</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="roadmap-content" id="business-roadmap">
+                    <div class="roadmap-timeline">
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Business Fundamentals</h3>
+                            <p class="timeline-description">Learn core business concepts and principles</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Accounting</span>
+                                <span class="skill-tag">Marketing</span>
+                                <span class="skill-tag">Economics</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Specialization</h3>
+                            <p class="timeline-description">Focus on your business area of interest</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Finance</span>
+                                <span class="skill-tag">Operations</span>
+                                <span class="skill-tag">Strategy</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Management Skills</h3>
+                            <p class="timeline-description">Develop leadership and management abilities</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Leadership</span>
+                                <span class="skill-tag">Negotiation</span>
+                                <span class="skill-tag">Decision Making</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Executive Level</h3>
+                            <p class="timeline-description">Strategic thinking and business innovation</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Strategic Planning</span>
+                                <span class="skill-tag">Innovation</span>
+                                <span class="skill-tag">Global Business</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="roadmap-content" id="creative-roadmap">
+                    <div class="roadmap-timeline">
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Creative Foundations</h3>
+                            <p class="timeline-description">Develop core creative skills and techniques</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Design Principles</span>
+                                <span class="skill-tag">Visual Communication</span>
+                                <span class="skill-tag">Creative Thinking</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Technical Skills</h3>
+                            <p class="timeline-description">Master industry tools and techniques</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Digital Tools</span>
+                                <span class="skill-tag">Software Proficiency</span>
+                                <span class="skill-tag">Production Techniques</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Portfolio Development</h3>
+                            <p class="timeline-description">Build a professional body of work</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Project Management</span>
+                                <span class="skill-tag">Client Relations</span>
+                                <span class="skill-tag">Personal Branding</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Creative Leadership</h3>
+                            <p class="timeline-description">Lead creative teams and projects</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Creative Direction</span>
+                                <span class="skill-tag">Team Management</span>
+                                <span class="skill-tag">Innovation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="roadmap-content" id="healthcare-roadmap">
+                    <div class="roadmap-timeline">
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Health Sciences</h3>
+                            <p class="timeline-description">Build foundation in health sciences and medical knowledge</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Anatomy</span>
+                                <span class="skill-tag">Physiology</span>
+                                <span class="skill-tag">Biochemistry</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Clinical Skills</h3>
+                            <p class="timeline-description">Develop hands-on clinical abilities</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Patient Care</span>
+                                <span class="skill-tag">Diagnosis</span>
+                                <span class="skill-tag">Treatment Planning</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Specialization</h3>
+                            <p class="timeline-description">Focus on your medical specialty</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Specialized Knowledge</span>
+                                <span class="skill-tag">Advanced Procedures</span>
+                                <span class="skill-tag">Research Methods</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="timeline-title">Healthcare Leadership</h3>
+                            <p class="timeline-description">Lead healthcare teams and improve systems</p>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Healthcare Management</span>
+                                <span class="skill-tag">Policy Development</span>
+                                <span class="skill-tag">Medical Innovation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mentor Section -->
+            <section class="mentor-section">
+                <div class="section-header">
+                    <h2 class="section-title">Connect with Mentors</h2>
+                    <a href="#" class="btn btn-primary">Find More Mentors</a>
+                </div>
+                <div class="mentor-grid">
+                    <div class="mentor-card">
+                        <div class="mentor-header">
+                            <div class="mentor-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="mentor-info">
+                                <h3>Dr. Priya Sharma</h3>
+                                <p>Computer Science Professor</p>
+                            </div>
+                        </div>
+                        <p class="mentor-bio">15+ years of experience in AI and machine learning. Passionate about guiding students in tech careers.</p>
+                        <div class="mentor-expertise">
+                            <span class="expertise-tag">AI/ML</span>
+                            <span class="expertise-tag">Research</span>
+                            <span class="expertise-tag">Career Guidance</span>
+                        </div>
+                        <div class="mentor-actions">
+                            <button class="btn btn-primary mentor-connect" data-mentor="priya">Connect</button>
+                            <button class="btn btn-secondary mentor-schedule" data-mentor="priya">Schedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mentor-card">
+                        <div class="mentor-header">
+                            <div class="mentor-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="mentor-info">
+                                <h3>Rajiv Mehta</h3>
+                                <p>Business Consultant</p>
+                            </div>
+                        </div>
+                        <p class="mentor-bio">Former executive at Fortune 500 company. Specializes in entrepreneurship and business strategy.</p>
+                        <div class="mentor-expertise">
+                            <span class="expertise-tag">Business Strategy</span>
+                            <span class="expertise-tag">Startups</span>
+                            <span class="expertise-tag">Leadership</span>
+                        </div>
+                        <div class="mentor-actions">
+                            <button class="btn btn-primary mentor-connect" data-mentor="rajiv">Connect</button>
+                            <button class="btn btn-secondary mentor-schedule" data-mentor="rajiv">Schedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mentor-card">
+                        <div class="mentor-header">
+                            <div class="mentor-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="mentor-info">
+                                <h3>Anita Desai</h3>
+                                <p>Creative Director</p>
+                            </div>
+                        </div>
+                        <p class="mentor-bio">Award-winning designer with 12+ years in the industry. Helps students build creative careers.</p>
+                        <div class="mentor-expertise">
+                            <span class="expertise-tag">Design</span>
+                            <span class="expertise-tag">Branding</span>
+                            <span class="expertise-tag">Portfolio Development</span>
+                        </div>
+                        <div class="mentor-actions">
+                            <button class="btn btn-primary mentor-connect" data-mentor="anita">Connect</button>
+                            <button class="btn btn-secondary mentor-schedule" data-mentor="anita">Schedule</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mentor-card">
+                        <div class="mentor-header">
+                            <div class="mentor-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="mentor-info">
+                                <h3>Dr. Vikram Singh</h3>
+                                <p>Healthcare Professional</p>
+                            </div>
+                        </div>
+                        <p class="mentor-bio">Medical practitioner with a passion for teaching. Guides students in healthcare careers.</p>
+                        <div class="mentor-expertise">
+                            <span class="expertise-tag">Medicine</span>
+                            <span class="expertise-tag">Healthcare</span>
+                            <span class="expertise-tag">Research</span>
+                        </div>
+                        <div class="mentor-actions">
+                            <button class="btn btn-primary mentor-connect" data-mentor="vikram">Connect</button>
+                            <button class="btn btn-secondary mentor-schedule" data-mentor="vikram">Schedule</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="comparison-sidebar" id="comparisonSidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Compare Courses</h2>
+            <button class="close-btn" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <table class="comparison-table" id="comparisonTable">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th id="course1Name">-</th>
+                    <th id="course2Name">-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Duration</td>
+                    <td id="course1Duration">-</td>
+                    <td id="course2Duration">-</td>
+                </tr>
+                <tr>
+                    <td>Avg. Starting Salary</td>
+                    <td id="course1Salary">-</td>
+                    <td id="course2Salary">-</td>
+                </tr>
+                <tr>
+                    <td>Top Career Paths</td>
+                    <td id="course1Careers">-</td>
+                    <td id="course2Careers">-</td>
+                </tr>
+                <tr>
+                    <td>Nearby Colleges</td>
+                    <td id="course1Colleges">-</td>
+                    <td id="course2Colleges">-</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="clear-comparison" id="clearComparison">Clear Selection</button>
+    </div>
+
+    <!-- Mentor Modal -->
+    <div id="mentorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title" id="mentorModalTitle">Connect with Mentor</h2>
+                <p class="modal-subtitle" id="mentorModalSubtitle">Schedule a session with our expert mentor</p>
+            </div>
+            <div class="modal-body">
+                <div id="mentorModalContent">
+                    <!-- Mentor details will be populated here -->
+                </div>
+                <div class="mentor-schedule">
+                    <h3>Available Slots</h3>
+                    <div class="schedule-item">
+                        <span class="schedule-day">Monday</span>
+                        <span class="schedule-time">4:00 PM - 6:00 PM</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-day">Wednesday</span>
+                        <span class="schedule-time">3:00 PM - 5:00 PM</span>
+                    </div>
+                    <div class="schedule-item">
+                        <span class="schedule-day">Friday</span>
+                        <span class="schedule-time">10:00 AM - 12:00 PM</span>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary">Book Session</button>
+                <button class="btn btn-secondary">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-title">Guid-ED Assistant</div>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">Hello! I'm your Guid-ED AI assistant. How can I help you today?</div>
+            </div>
+            <div class="chatbot-suggestions">
+                <button class="suggestion-btn" data-message="Which course is best for me?">Which course is best for me?</button>
+                <button class="suggestion-btn" data-message="Tell me about career options">Tell me about career options</button>
+                <button class="suggestion-btn" data-message="How to prepare for entrance exams?">How to prepare for entrance exams?</button>
+                <button class="suggestion-btn" data-message="Find a mentor">Find a mentor</button>
+            </div>
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message...">
+                <button class="chatbot-send" id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-icon" id="chatbotIcon">
+            <i class="fas fa-robot"></i>
+        </button>
+    </div>
+
+    <script>
+        // Sample course data
+        const courses = [
+            {
+                id: 1,
+                title: "B.Tech. Computer Science",
+                stream: "science",
+                match: 92,
+                careers: [
+                    { icon: "fas fa-building", label: "Govt Jobs" },
+                    { icon: "fas fa-laptop-code", label: "IT Sector" },
+                    { icon: "fas fa-graduation-cap", label: "Higher Ed" },
+                    { icon: "fas fa-rocket", label: "Startup" }
+                ],
+                colleges: 5,
+                duration: "3 Years",
+                salary: "₹5-8 LPA",
+                topCareers: "Software Developer, Data Scientist, IT Consultant",
+                nearbyColleges: "Govt Science College, City University",
+                careerPathUrl: "career-path.html?id=1",
+                comparisonUrl: "compare.html?id=1"
+            },
+            {
+                id: 2,
+                title: "B.Com. (Hons)",
+                stream: "commerce",
+                match: 85,
+                careers: [
+                    { icon: "fas fa-building", label: "Govt Jobs" },
+                    { icon: "fas fa-chart-line", label: "Finance" },
+                    { icon: "fas fa-graduation-cap", label: "Higher Ed" },
+                    { icon: "fas fa-briefcase", label: "Consulting" }
+                ],
+                colleges: 7,
+                duration: "3 Years",
+                salary: "₹4-7 LPA",
+                topCareers: "Accountant, Financial Analyst, Tax Consultant",
+                nearbyColleges: "Commerce College, Arts & Commerce Institute",
+                careerPathUrl: "career-path.html?id=2",
+                comparisonUrl: "compare.html?id=2"
+            },
+            {
+                id: 3,
+                title: "B.A. Psychology",
+                stream: "arts",
+                match: 78,
+                careers: [
+                    { icon: "fas fa-heart", label: "Counseling" },
+                    { icon: "fas fa-school", label: "Education" },
+                    { icon: "fas fa-graduation-cap", label: "Higher Ed" },
+                    { icon: "fas fa-hospital", label: "Healthcare" }
+                ],
+                colleges: 3,
+                duration: "3 Years",
+                salary: "₹3-6 LPA",
+                topCareers: "Counselor, HR Specialist, Researcher",
+                nearbyColleges: "Arts College, Women's University",
+                careerPathUrl: "career-path.html?id=3",
+                comparisonUrl: "compare.html?id=3"
+            },
+            {
+                id: 4,
+                title: "BBA",
+                stream: "commerce",
+                match: 80,
+                careers: [
+                    { icon: "fas fa-briefcase", label: "Management" },
+                    { icon: "fas fa-chart-pie", label: "Marketing" },
+                    { icon: "fas fa-graduation-cap", label: "Higher Ed" },
+                    { icon: "fas fa-rocket", label: "Startup" }
+                ],
+                colleges: 4,
+                duration: "3 Years",
+                salary: "₹4-8 LPA",
+                topCareers: "Business Analyst, Marketing Manager, Entrepreneur",
+                nearbyColleges: "Management Institute, Commerce College",
+                careerPathUrl: "career-path.html?id=4",
+                comparisonUrl: "compare.html?id=4"
+            },
+            {
+                id: 5,
+                title: "B.Voc. IT",
+                stream: "vocational",
+                match: 88,
+                careers: [
+                    { icon: "fas fa-laptop-code", label: "IT Sector" },
+                    { icon: "fas fa-network-wired", label: "Networking" },
+                    { icon: "fas fa-certificate", label: "Certifications" },
+                    { icon: "fas fa-tools", label: "Tech Support" }
+                ],
+                colleges: 6,
+                duration: "3 Years",
+                salary: "₹3-6 LPA",
+                topCareers: "System Administrator, IT Support, Network Engineer",
+                nearbyColleges: "Polytechnic College, Vocational Institute",
+                careerPathUrl: "career-path.html?id=5",
+                comparisonUrl: "compare.html?id=5"
+            },
+            {
+                id: 6,
+                title: "B.Sc. Biotechnology",
+                stream: "science",
+                match: 75,
+                careers: [
+                    { icon: "fas fa-microscope", label: "Research" },
+                    { icon: "fas fa-pills", label: "Pharma" },
+                    { icon: "fas fa-graduation-cap", label: "Higher Ed" },
+                    { icon: "fas fa-dna", label: "Genetics" }
+                ],
+                colleges: 2,
+                duration: "3 Years",
+                salary: "₹4-7 LPA",
+                topCareers: "Lab Technician, Research Assistant, Quality Analyst",
+                nearbyColleges: "Life Sciences College, Biotech Institute",
+                careerPathUrl: "career-path.html?id=6",
+                comparisonUrl: "compare.html?id=6"
+            }
+        ];
+
+        // Sample mentor data
+        const mentors = {
+            priya: {
+                name: "Dr. Priya Sharma",
+                title: "Computer Science Professor",
+                bio: "15+ years of experience in AI and machine learning. Passionate about guiding students in tech careers.",
+                expertise: ["AI/ML", "Research", "Career Guidance"],
+                image: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
+            rajiv: {
+                name: "Rajiv Mehta",
+                title: "Business Consultant",
+                bio: "Former executive at Fortune 500 company. Specializes in entrepreneurship and business strategy.",
+                expertise: ["Business Strategy", "Startups", "Leadership"],
+                image: "https://randomuser.me/api/portraits/men/32.jpg"
+            },
+            anita: {
+                name: "Anita Desai",
+                title: "Creative Director",
+                bio: "Award-winning designer with 12+ years in the industry. Helps students build creative careers.",
+                expertise: ["Design", "Branding", "Portfolio Development"],
+                image: "https://randomuser.me/api/portraits/women/68.jpg"
+            },
+            vikram: {
+                name: "Dr. Vikram Singh",
+                title: "Healthcare Professional",
+                bio: "Medical practitioner with a passion for teaching. Guides students in healthcare careers.",
+                expertise: ["Medicine", "Healthcare", "Research"],
+                image: "https://randomuser.me/api/portraits/men/75.jpg"
+            }
+        };
+
+        // Chatbot responses
+        const chatbotResponses = {
+            "which course is best for me": "Based on your interests in problem-solving and creativity, I'd recommend B.Tech. Computer Science with a 92% match. It aligns well with your strengths and offers diverse career opportunities.",
+            "tell me about career options": "We have several career roadmaps available: Technology, Business, Creative, and Healthcare. Each roadmap shows a progression from foundational skills to advanced expertise. Would you like me to explain any specific career path?",
+            "how to prepare for entrance exams": "For entrance exams, I recommend: 1) Start early with a study plan, 2) Focus on core subjects, 3) Practice with previous years' papers, 4) Take mock tests regularly, and 5) Join a coaching institute if needed. Would you like specific tips for any particular exam?",
+            "find a mentor": "We have several expert mentors available across different fields. Dr. Priya Sharma for technology, Rajiv Mehta for business, Anita Desai for creative fields, and Dr. Vikram Singh for healthcare. You can connect with them directly through their profiles.",
+            "default": "I'm here to help with your career and education questions. You can ask me about course recommendations, career paths, exam preparation, or mentorship."
+        };
+
+        // DOM elements
+        const courseGrid = document.getElementById('courseGrid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.querySelector('.search-input');
+        const locationToggle = document.getElementById('locationToggle');
+        const comparisonSidebar = document.getElementById('comparisonSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const clearComparison = document.getElementById('clearComparison');
+        const overlay = document.getElementById('overlay');
+        const roadmapTabs = document.querySelectorAll('.tab-btn');
+        const roadmapContents = document.querySelectorAll('.roadmap-content');
+        const mentorModal = document.getElementById('mentorModal');
+        const mentorModalTitle = document.getElementById('mentorModalTitle');
+        const mentorModalContent = document.getElementById('mentorModalContent');
+        const closeModalBtn = document.querySelector('.close-modal');
+        
+        // Chatbot elements
+        const chatbotIcon = document.getElementById('chatbotIcon');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const chatbotClose = document.getElementById('chatbotClose');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+
+        // State
+        let selectedStream = 'all';
+        let searchQuery = '';
+        let showNearbyOnly = false;
+        let selectedCourses = [];
+        let favorites = [];
+
+        // Initialize the page
+        function init() {
+            renderCourses();
+            setupEventListeners();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Stream filter buttons
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedStream = btn.dataset.stream;
+                    renderCourses();
+                });
+            });
+
+            // Search input
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderCourses();
+            });
+
+            // Location toggle
+            locationToggle.addEventListener('change', (e) => {
+                showNearbyOnly = e.target.checked;
+                renderCourses();
+            });
+
+            // Close sidebar
+            closeSidebar.addEventListener('click', closeComparisonSidebar);
+            overlay.addEventListener('click', closeComparisonSidebar);
+            
+            // Clear comparison
+            clearComparison.addEventListener('click', () => {
+                selectedCourses = [];
+                document.querySelectorAll('.course-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                closeComparisonSidebar();
+            });
+
+            // Roadmap tabs
+            roadmapTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    roadmapTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const roadmapId = tab.dataset.roadmap;
+                    roadmapContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${roadmapId}-roadmap`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Mentor modal
+            closeModalBtn.addEventListener('click', () => {
+                mentorModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === mentorModal) {
+                    mentorModal.style.display = 'none';
+                }
+            });
+
+            // Chatbot
+            chatbotIcon.addEventListener('click', () => {
+                chatbotWindow.classList.toggle('active');
+            });
+
+            chatbotClose.addEventListener('click', () => {
+                chatbotWindow.classList.remove('active');
+            });
+
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            suggestionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const message = btn.dataset.message;
+                    chatbotInput.value = message;
+                    sendMessage();
+                });
+            });
+        }
+
+        // Render courses based on filters
+        function renderCourses() {
+            let filteredCourses = courses;
+
+            // Filter by stream
+            if (selectedStream !== 'all') {
+                filteredCourses = filteredCourses.filter(course => course.stream === selectedStream);
+            }
+
+            // Filter by search query
+            if (searchQuery) {
+                filteredCourses = filteredCourses.filter(course => 
+                    course.title.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Filter by nearby colleges
+            if (showNearbyOnly) {
+                filteredCourses = filteredCourses.filter(course => course.colleges > 0);
+            }
+
+            // Clear the grid
+            courseGrid.innerHTML = '';
+
+            // Render each course
+            filteredCourses.forEach(course => {
+                const courseCard = createCourseCard(course);
+                courseGrid.appendChild(courseCard);
+            });
+        }
+
+        // Create a course card element
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            card.dataset.id = course.id;
+
+            // Check if this course is selected for comparison
+            if (selectedCourses.includes(course.id)) {
+                card.classList.add('selected');
+            }
+
+            // Create the card HTML
+            card.innerHTML = `
+                <div class="stream-banner ${course.stream}"></div>
+                <button class="favorite-btn ${favorites.includes(course.id) ? 'active' : ''}" data-id="${course.id}">
+                    <i class="fas fa-star"></i>
+                </button>
+                <div class="card-content">
+                    <div class="match-score">
+                        <div class="score-circle" style="--score: ${course.match}%">
+                            <span class="score-text">${course.match}%</span>
+                        </div>
+                        <div>Match</div>
+                    </div>
+                    <h3 class="course-title">${course.title}</h3>
+                    <div class="career-paths">
+                        ${course.careers.map(career => `
+                            <div class="career-item">
+                                <div class="career-icon">
+                                    <i class="${career.icon}"></i>
+                                </div>
+                                <div class="career-label">${career.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="college-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${course.colleges} colleges near you</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="${course.careerPathUrl}" class="btn btn-primary">
+                            <i class="fas fa-route"></i> Career Path
+                        </a>
+                        <a href="${course.comparisonUrl}" class="btn btn-secondary">
+                            <i class="fas fa-balance-scale"></i> Compare
+                        </a>
+                        <button class="btn btn-purple roadmap-btn" data-id="${course.id}">
+                            <i class="fas fa-map"></i> Roadmap
+                        </button>
+                        <button class="btn btn-teal mentor-btn" data-id="${course.id}">
+                            <i class="fas fa-user-tie"></i> Mentor
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners
+            const favoriteBtn = card.querySelector('.favorite-btn');
+            const roadmapBtn = card.querySelector('.roadmap-btn');
+            const mentorBtn = card.querySelector('.mentor-btn');
+
+            favoriteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(course.id);
+            });
+
+            roadmapBtn.addEventListener('click', () => {
+                // Scroll to roadmap section
+                document.querySelector('.roadmap-section').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            mentorBtn.addEventListener('click', () => {
+                // Scroll to mentor section
+                document.querySelector('.mentor-section').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            return card;
+        }
+
+        // Toggle favorite status
+        function toggleFavorite(courseId) {
+            const index = favorites.indexOf(courseId);
+            if (index === -1) {
+                favorites.push(courseId);
+            } else {
+                favorites.splice(index, 1);
+            }
+            
+            // Update the UI
+            const favoriteBtn = document.querySelector(`.favorite-btn[data-id="${courseId}"]`);
+            favoriteBtn.classList.toggle('active');
+        }
+
+        // Show comparison sidebar
+        function showComparisonSidebar() {
+            if (selectedCourses.length !== 2) return;
+
+            const course1 = courses.find(c => c.id === selectedCourses[0]);
+            const course2 = courses.find(c => c.id === selectedCourses[1]);
+
+            // Update comparison table
+            document.getElementById('course1Name').textContent = course1.title;
+            document.getElementById('course2Name').textContent = course2.title;
+            document.getElementById('course1Duration').textContent = course1.duration;
+            document.getElementById('course2Duration').textContent = course2.duration;
+            document.getElementById('course1Salary').textContent = course1.salary;
+            document.getElementById('course2Salary').textContent = course2.salary;
+            document.getElementById('course1Careers').textContent = course1.topCareers;
+            document.getElementById('course2Careers').textContent = course2.topCareers;
+            document.getElementById('course1Colleges').textContent = course1.nearbyColleges;
+            document.getElementById('course2Colleges').textContent = course2.nearbyColleges;
+
+            // Show sidebar and overlay
+            comparisonSidebar.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        // Close comparison sidebar
+        function closeComparisonSidebar() {
+            comparisonSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Mentor connect and schedule buttons
+        document.querySelectorAll('.mentor-connect, .mentor-schedule').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const mentorId = e.target.dataset.mentor;
+                const mentor = mentors[mentorId];
+                
+                if (mentor) {
+                    mentorModalTitle.textContent = `Connect with ${mentor.name}`;
+                    mentorModalContent.innerHTML = `
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <img src="${mentor.image}" alt="${mentor.name}" style="width: 80px; height: 80px; border-radius: 50%; margin-right: 20px;">
+                            <div>
+                                <h3>${mentor.name}</h3>
+                                <p style="color: var(--text-light);">${mentor.title}</p>
+                            </div>
+                        </div>
+                        <p>${mentor.bio}</p>
+                        <div style="margin-top: 15px;">
+                            <strong>Expertise:</strong>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px;">
+                                ${mentor.expertise.map(skill => `<span class="expertise-tag">${skill}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    mentorModal.style.display = 'block';
+                }
+            });
+        });
+
+        // Chatbot functions
+        function sendMessage() {
+            const message = chatbotInput.value.trim();
+            if (message === '') return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            chatbotInput.value = '';
+            
+            // Generate bot response
+            setTimeout(() => {
+                const response = generateBotResponse(message);
+                addMessage(response, 'bot');
+            }, 500);
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            chatbotMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        function generateBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Check for predefined responses
+            for (const key in chatbotResponses) {
+                if (lowerMessage.includes(key)) {
+                    return chatbotResponses[key];
+                }
+            }
+            
+            // Default response
+            return chatbotResponses.default;
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
